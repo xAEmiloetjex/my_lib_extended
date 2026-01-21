@@ -57,4 +57,17 @@ A.set(67);
 // A.readable(false);
 dir({...val(), A: get(A)})
 
+const UwU = new Vec()
+    .setSpace(Spaces.ALPHABET)
+    .unsafe(true)
+    .fromString('__ivec[0,2,436,1]');
+const OwO = UwU
+    .clone()
+    .setSpace(Spaces.VEC);
+
+dir({
+    UwU: UwU.map(),
+    OwO: OwO.map()
+})
+
 })()
