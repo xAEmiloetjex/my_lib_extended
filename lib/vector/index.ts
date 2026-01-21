@@ -288,48 +288,58 @@ export class Vec<T> {
         const v: T[] = this.toArray();
 
         if (space === Spaces.VEC) {
-            if (this.length === 1) space = Spaces.VEC1;
-            if (this.length === 2) space = Spaces.VEC2;
-            if (this.length === 3) space = Spaces.VEC3;
-            if (this.length === 4) space = Spaces.VEC4;
+            switch (this.length) {
+                case 1:
+                    space = Spaces.VEC1;
+                    break;
+                case 2:
+                    space = Spaces.VEC2;
+                    break;                    
+                case 3:
+                    space = Spaces.VEC3;
+                    break;
+                case 4:
+                    space = Spaces.VEC4;
+                    break;                                        
+            }
         }
 
-        if (space === Spaces.SINGLE) space = Spaces.VEC1;
-        if (space === Spaces.QUATERNION) space = Spaces.VEC4;
+        else if (space === Spaces.SINGLE) space = Spaces.VEC1;
+        else if (space === Spaces.QUATERNION) space = Spaces.VEC4;
 
         if (space === Spaces.RGB) {
             arr.push({ idx: 0, label: "r", value: v[0]});
             arr.push({ idx: 1, label: "g", value: v[1] });
             arr.push({idx: 2, label: 'b', value: v[2]});
         }
-        if (space === Spaces.RGBA) {
+        else if (space === Spaces.RGBA) {
             arr.push({idx: 0, label: "r", value: v[0]});
             arr.push({idx: 1, label: "g", value: v[1]});
             arr.push({idx: 2, label: 'b', value: v[2]});
             arr.push({idx: 3, label: 'a', value: v[3]});
         }
 
-        if (space === Spaces.VEC1) {
+        else if (space === Spaces.VEC1) {
             arr.push({ idx: 0, label: "x", value: v[0] });
         }
 
-        if(space === Spaces.VEC2) {
+        else if(space === Spaces.VEC2) {
             arr.push({ idx: 0, label: "x", value: v[0] });
             arr.push({ idx: 1, label: "y", value: v[1] });
         }
-        if(space === Spaces.VEC3) {
+        else if(space === Spaces.VEC3) {
             arr.push({ idx: 0, label: "x", value: v[0] });
             arr.push({ idx: 1, label: "y", value: v[1] });
             arr.push({ idx: 2, label: "z", value: v[2] });
         }
-        if(space === Spaces.VEC4) {
+        else if(space === Spaces.VEC4) {
             arr.push({ idx: 0, label: "x", value: v[0] });
             arr.push({ idx: 1, label: "y", value: v[1] });
             arr.push({ idx: 2, label: "z", value: v[2] });
             arr.push({ idx: 3, label: "w", value: v[3] });
         }
 
-        if(space === Spaces.ALPHABET) {
+        else if(space === Spaces.ALPHABET) {
             for (let i = 0; i < v.length; i++) {
                 // 0) [ALPHABET[1]] = v[1]:
                 arr.push({ idx: i, label: genLabelByIdx(i), value: v[i] });
@@ -357,21 +367,31 @@ export class Vec<T> {
 
         const v: T[] = this.toArray();
         if (space === Spaces.VEC) {
-            if (this.length === 1) space = Spaces.VEC1;
-            if (this.length === 2) space = Spaces.VEC2;
-            if (this.length === 3) space = Spaces.VEC3;
-            if (this.length === 4) space = Spaces.VEC4;
+            switch (this.length) {
+                case 1:
+                    space = Spaces.VEC1;
+                    break;
+                case 2:
+                    space = Spaces.VEC2;
+                    break;                    
+                case 3:
+                    space = Spaces.VEC3;
+                    break;
+                case 4:
+                    space = Spaces.VEC4;
+                    break;                                        
+            }
         }
-        if (space === Spaces.SINGLE) space = Spaces.VEC1;
-        if (space === Spaces.QUATERNION) space = Spaces.VEC4;
+        else if (space === Spaces.SINGLE) space = Spaces.VEC1;
+        else if (space === Spaces.QUATERNION) space = Spaces.VEC4;
 
         if (space === Spaces.RGB) return { r: v[0], g: v[1], b: v[2] };
-        if (space === Spaces.RGBA) return { r: v[0], g: v[1], b: v[2], a: v[3] };
-        if (space === Spaces.VEC1) return { x: v[0] };
-        if (space === Spaces.VEC2) return { x: v[0], y: v[1] };
-        if (space === Spaces.VEC3) return { x: v[0], y: v[1], z: v[2] };
-        if (space === Spaces.VEC4) return { x: v[0], y: v[1], z: v[2], w: v[3] };
-        if (space === Spaces.ALPHABET) {
+        else if (space === Spaces.RGBA) return { r: v[0], g: v[1], b: v[2], a: v[3] };
+        else if (space === Spaces.VEC1) return { x: v[0] };
+        else if (space === Spaces.VEC2) return { x: v[0], y: v[1] };
+        else if (space === Spaces.VEC3) return { x: v[0], y: v[1], z: v[2] };
+        else if (space === Spaces.VEC4) return { x: v[0], y: v[1], z: v[2], w: v[3] };
+        else if (space === Spaces.ALPHABET) {
             let obj: {[key: string]: T} = {};
             for (let i = 0; i < v.length; i++) {
                 obj[genLabelByIdx(i)] = v[i];
@@ -454,14 +474,14 @@ export class Vec<T> {
         this.readonly(false);
         this.allowUnsafe(true);
         if (str.startsWith('__vec')) type = VecTypes.VEC;
-        if (str.startsWith('__svec')) type = VecTypes.SVEC;
-        if (str.startsWith('__uvec')) type = VecTypes.UVEC;
-        if (str.startsWith('__suvec')) type = VecTypes.SUVEC;
-        if (str.startsWith('__ivec')) type = VecTypes.IVEC;
-        if (str.startsWith('__evec')) type = VecTypes.EVEC;
-        if (str.startsWith('__sevec')) type = VecTypes.SEVEC;
-        if (str.startsWith('__uevec')) type = VecTypes.UEVEC;
-        if (str.startsWith('__suevec')) type = VecTypes.SUEVEC;
+        else if (str.startsWith('__svec')) type = VecTypes.SVEC;
+        else if (str.startsWith('__uvec')) type = VecTypes.UVEC;
+        else if (str.startsWith('__suvec')) type = VecTypes.SUVEC;
+        else if (str.startsWith('__ivec')) type = VecTypes.IVEC;
+        else if (str.startsWith('__evec')) type = VecTypes.EVEC;
+        else if (str.startsWith('__sevec')) type = VecTypes.SEVEC;
+        else if (str.startsWith('__uevec')) type = VecTypes.UEVEC;
+        else if (str.startsWith('__suevec')) type = VecTypes.SUEVEC;
         arrStr = str.replace(type, '');
         arr = JSON.parse(arrStr);
 
