@@ -16,7 +16,7 @@ export function genLabelByIdx(idx: number): string {
     return result;
 }
 
-export type VecString<T extends string = string> =
+export type VecString =
     | `__vec${string}`
     | `__uvec${string}`
     | `__svec${string}`
@@ -90,11 +90,13 @@ export enum Spaces {
 }
 
 export class Vec<T> {
-    private _space: Spaces = Spaces.ALPHABET;
 
-    // @ts-expect-error
+// @ts-expect-error
+    private #space: Spaces = Spaces.ALPHABET;
+// @ts-expect-error
     private #values: Map<int, T> = new Map<int, T>();
-    private _length: () => int = () => this.#values.size;
+// @ts-expect-error
+    private #length: () => int = () => this.#values.size;
 
 // @ts-expect-error
     private #static  : boolean = false;
@@ -115,11 +117,11 @@ export class Vec<T> {
     }
     public get length(): int {
         if (this.#readable !== true) return 0;
-        return this._length();
+        return this.#length();
     }
 
     public get space(): Spaces {
-        return this._space;
+        return this.#space;
     }
 
     /**
@@ -147,7 +149,7 @@ export class Vec<T> {
     }
 
     public setSpace(space: Spaces) {
-        this._space = space;
+        this.#space = space;
         return this;
     }
 
@@ -279,7 +281,7 @@ export class Vec<T> {
     }
 
     // utils
-    public idxMap(space: Spaces = this._space): { idx: number, label: string, value: T}[] {
+    public idxMap(space: Spaces = this.#space): { idx: number, label: string, value: T}[] {
         if (this.#readable !== true) return [];
 
         let arr: { idx: number, label: string, value: T}[] = [];
@@ -351,7 +353,7 @@ export class Vec<T> {
     public map(space?: Spaces): {[key: string]: T} {
         if (this.#readable !== true) return {};
 
-        if (space === undefined) space = this._space;
+        if (space === undefined) space = this.#space;
 
         const v: T[] = this.toArray();
         if (space === Spaces.VEC) {
