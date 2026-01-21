@@ -36,8 +36,17 @@ function val() {
 
 dir(val())
 
-$IMUT.set(420);
+// @ts-ignore
+$IMUT['UwU'] = 'OwO'
+
+// @ts-ignore
+// $IMUT.#static = false;
+$IMUT.set(8080)
+$IMUT.values.set(0, 67);
+
 $MUT.set(69);
+
+
 dir(val())
 
 const A = $IMUT.clone().mut();

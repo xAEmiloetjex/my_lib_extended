@@ -95,16 +95,25 @@ export class Vec<T> {
     private _values: Map<int, T> = new Map<int, T>();
     private _length: () => int = () => this._values.size;
 
-    private _static  : boolean = false;
-    private _readable: boolean = true;
-    private _unsafe  : boolean = false;
+// @ts-expect-error
+    private #static  : boolean = false;
+// @ts-expect-error
+    private #readable: boolean = true;
+// @ts-expect-error
+    private #unsafe  : boolean = false;
 
     public get values(): Map<int, T> {
-        if (this._readable !== true) return new Map();
-        return this._values;
+        const values = new Map();
+        if (this.#readable !== true) return values;
+
+        this._values.forEach((v,k,_m) => {
+            values.set(k,v);
+        })
+
+        return values;
     }
     public get length(): int {
-        if (this._readable !== true) return 0;
+        if (this.#readable !== true) return 0;
         return this._length();
     }
 
@@ -116,16 +125,16 @@ export class Vec<T> {
      * Alias for `isReadonly`
      */
     public get isStatic(): boolean {
-        return this._static;
+        return this.#static;
     }
     public get isReadonly(): boolean {
-        return this._static;
+        return this.#static;
     }
     public get isReadable(): boolean {
-        return this._readable;
+        return this.#readable;
     }
     public get unsafeAllowed(): boolean {
-        return this._unsafe;
+        return this.#unsafe;
     }
 
     constructor(
@@ -142,8 +151,8 @@ export class Vec<T> {
     }
 
     public allowUnsafe(state?: boolean) {
-        if (state === undefined) this._unsafe = true;
-        else this._unsafe = state;
+        if (state === undefined) this.#unsafe = true;
+        else this.#unsafe = state;
         return this;
     }
 
@@ -181,27 +190,27 @@ export class Vec<T> {
 
 
     public immutable(state?: boolean) {
-        if (state === undefined) this._static = true;
-        else this._static = state;
+        if (state === undefined) this.#static = true;
+        else this.#static = state;
         return this;
     }
     public mutable(state?: boolean) {
-        if (state === undefined) this._static = false;
-        else this._static = !state;
+        if (state === undefined) this.#static = false;
+        else this.#static = !state;
         return this;
     }
 
     public readable(state?: boolean) {
-        if (this._unsafe !== true) return this;
+        if (this.#unsafe !== true) return this;
 
-        if (state === undefined) this._readable = true;
-        else this._readable = state;
+        if (state === undefined) this.#readable = true;
+        else this.#readable = state;
         return this;
     }
     // operations
 
     public add(value: T) {
-        if (this._static === true) return;
+        if (this.#static === true) return;
         this._values.set(this.length, value);
     }
 
@@ -210,7 +219,7 @@ export class Vec<T> {
     // public set(k: string, v: T) { }
 
     public get(k?: string) {
-        if (this._readable !== true) return null;
+        if (this.#readable !== true) return null;
         if (k === undefined) return this.getIdx(0);
 
         const m = this.map();
@@ -218,7 +227,7 @@ export class Vec<T> {
     }
 
     public getIdx(idx?: int): T | null | undefined {
-        if (this._readable !== true) return null;
+        if (this.#readable !== true) return null;
         if (idx === undefined) idx = 0;
 
         return this._values.get(idx);
@@ -226,8 +235,8 @@ export class Vec<T> {
 
     // unsafe operations
     public set(label: string|T, value?: T) {
-        if (this._static === true) return;
-        if (this._unsafe !== true) return;
+        if (this.#static === true) return;
+        if (this.#unsafe !== true) return;
 
 // @ts-ignore
         if (value === undefined) return this.setIdx(0, label);
@@ -241,16 +250,16 @@ export class Vec<T> {
     }
 
     public setIdx(idx: int|T, value: T): void {
-        if (this._static === true) return;
-        if (this._unsafe !== true) return;
+        if (this.#static === true) return;
+        if (this.#unsafe !== true) return;
         if (value === undefined) return this.setIdx(0, idx);
         this._values.set(idx, value);
     }
 
 
     public remove(label?: string) {
-        if (this._static === true) return;
-        if (this._unsafe !== true) return;
+        if (this.#static === true) return;
+        if (this.#unsafe !== true) return;
 
 // @ts-ignore
         if (label === undefined) return this.removeIdx(0);
@@ -262,15 +271,15 @@ export class Vec<T> {
     }
 
     public removeIdx(idx?: int) {
-        if (this._static === true) return;
-        if (this._unsafe !== true) return;
+        if (this.#static === true) return;
+        if (this.#unsafe !== true) return;
         if (idx === undefined) idx = 0;
         this._values.delete(idx);
     }
 
     // utils
     public idxMap(space: Spaces = this._space): { idx: number, label: string, value: T}[] {
-        if (this._readable !== true) return [];
+        if (this.#readable !== true) return [];
 
         let arr: { idx: number, label: string, value: T}[] = [];
         const v: T[] = this.toArray();
@@ -329,7 +338,7 @@ export class Vec<T> {
     }
 
     public toArray(): T[] {
-        if (this._readable !== true) return [];
+        if (this.#readable !== true) return [];
 
         let arr: T[] = []
         this.values.forEach((v: T, k: int, m) => {
@@ -339,7 +348,7 @@ export class Vec<T> {
     };
 
     public map(space?: Spaces): {[key: string]: T} {
-        if (this._readable !== true) return {};
+        if (this.#readable !== true) return {};
 
         if (space === undefined) space = this._space;
 
@@ -372,42 +381,42 @@ export class Vec<T> {
 
     public clone() {
         return new Vec<T>(...(this.toArray()))
-            .static(this._static)
-            .allowUnsafe(this._unsafe)
-            .readable(this._readable);
+            .static(this.#static)
+            .allowUnsafe(this.#unsafe)
+            .readable(this.#readable);
     }
 
     public toString(inheritParentProps: boolean = false): VecString {
 
         if (inheritParentProps === true)
             return `__ivec${JSON.stringify(this.toArray())}`;
-        if (this._static === true && this._unsafe === true)
+        if (this.#static === true && this.#unsafe === true)
             return `__suvec${JSON.stringify(this.toArray())}`;
-        else if (this._static === true)
+        else if (this.#static === true)
             return `__svec${JSON.stringify(this.toArray())}`;
-        else if (this._unsafe === true)
+        else if (this.#unsafe === true)
             return `__uvec${JSON.stringify(this.toArray())}`;
 
 // @ts-expect-error
-        else if((this._readable !== true) && this._static === true && this._unsafe === true)
+        else if((this.#readable !== true) && this.#static === true && this.#unsafe === true)
             return '__suevec[]';
 
 // @ts-expect-error
-        else if((this._readable !== true) && this._static === true)
+        else if((this.#readable !== true) && this.#static === true)
             return '__sevec[]';
 
 // @ts-expect-error
-        else if((this._readable !== true) && this._unsafe === true)
+        else if((this.#readable !== true) && this.#unsafe === true)
             return '__uevec[]';
-        else if(this._readable !== true)
+        else if(this.#readable !== true)
             return '__evec[]';
         else
             return `__vec${JSON.stringify(this.toArray())}`;
     }
 
     public fromArray(values: T[]): this {
-        if (this._static === true) return this;
-        if (this._unsafe !== true) return this;
+        if (this.#static === true) return this;
+        if (this.#unsafe !== true) return this;
         for (let i = 0; i < values.length; i++) {
             this.setIdx(i, values[i]);
         }
@@ -430,8 +439,8 @@ export class Vec<T> {
         let oUnsafe: boolean = false;
         let oStatic: boolean = false;
 
-        if (this._unsafe === true) oUnsafe = true;
-        if (this._static === true) oStatic = true;
+        if (this.#unsafe === true) oUnsafe = true;
+        if (this.#static === true) oStatic = true;
 
         /** */
         let type: VecTypes = VecTypes.VEC;
