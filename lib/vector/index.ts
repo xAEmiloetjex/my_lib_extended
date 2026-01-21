@@ -92,8 +92,9 @@ export enum Spaces {
 export class Vec<T> {
     private _space: Spaces = Spaces.ALPHABET;
 
-    private _values: Map<int, T> = new Map<int, T>();
-    private _length: () => int = () => this._values.size;
+    // @ts-expect-error
+    private #values: Map<int, T> = new Map<int, T>();
+    private _length: () => int = () => this.#values.size;
 
 // @ts-expect-error
     private #static  : boolean = false;
@@ -106,7 +107,7 @@ export class Vec<T> {
         const values = new Map();
         if (this.#readable !== true) return values;
 
-        this._values.forEach((v,k,_m) => {
+        this.#values.forEach((v,k,_m) => {
             values.set(k,v);
         })
 
@@ -141,7 +142,7 @@ export class Vec<T> {
         ...values: T[]
     ) {
         for (let i = 0; i < values.length; i++) {
-            this._values.set(i, values[i]);
+            this.#values.set(i, values[i]);
         }
     }
 
@@ -211,7 +212,7 @@ export class Vec<T> {
 
     public add(value: T) {
         if (this.#static === true) return;
-        this._values.set(this.length, value);
+        this.#values.set(this.length, value);
     }
 
     // public remove(value: T) { }
@@ -230,7 +231,7 @@ export class Vec<T> {
         if (this.#readable !== true) return null;
         if (idx === undefined) idx = 0;
 
-        return this._values.get(idx);
+        return this.#values.get(idx);
     }
 
     // unsafe operations
@@ -245,7 +246,7 @@ export class Vec<T> {
 // @ts-ignore
         const find = findMap(idxMap, 'label', label);
 
-        this._values.set(find, value);
+        this.#values.set(find, value);
         return this;
     }
 
@@ -253,7 +254,7 @@ export class Vec<T> {
         if (this.#static === true) return;
         if (this.#unsafe !== true) return;
         if (value === undefined) return this.setIdx(0, idx);
-        this._values.set(idx, value);
+        this.#values.set(idx, value);
     }
 
 
@@ -266,7 +267,7 @@ export class Vec<T> {
 
         const idxMap = this.idxMap();
         const find = findMap(idxMap, 'label', label);
-        this._values.delete(find);
+        this.#values.delete(find);
         return this;
     }
 
@@ -274,7 +275,7 @@ export class Vec<T> {
         if (this.#static === true) return;
         if (this.#unsafe !== true) return;
         if (idx === undefined) idx = 0;
-        this._values.delete(idx);
+        this.#values.delete(idx);
     }
 
     // utils

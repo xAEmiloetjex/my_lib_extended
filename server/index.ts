@@ -43,6 +43,8 @@ $IMUT['UwU'] = 'OwO'
 // $IMUT.#static = false;
 $IMUT.set(8080)
 $IMUT.values.set(0, 67);
+// @ts-ignore
+// $IMUT.#values.set(0, 6969);
 
 $MUT.set(69);
 
