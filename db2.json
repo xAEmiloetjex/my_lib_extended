@@ -1,0 +1,9 @@
+{
+  "kvs_test2_KVSTORE.DB_META": "__ivec[\"__suvec[\\\"name\\\",\\\"prefix\\\"]\",\"__uvec[\\\"Test DB\\\",\\\"kvs_test2_\\\"]\"]",
+  "kvs_test2_KVSTORE.test_key_string": "Hello, KVStore!",
+  "kvs_test2_KVSTORE.test_key_number": 42,
+  "kvs_test2_KVSTORE.test_key_boolean": true,
+  "JSON_kvs_test2_KVSTORE.test_key_null": "null",
+  "JSON_kvs_test2_KVSTORE.test_key_array": "[1,2,3,4,5]",
+  "JSON_kvs_test2_KVSTORE.test_key_object": "{\"a\":1,\"b\":\"two\",\"c\":true}"
+}

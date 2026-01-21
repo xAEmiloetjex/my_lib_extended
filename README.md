@@ -1,2 +1,15 @@
-# my_lib_extended
-just a huge collection of my utils, and some of their applications
+# ddrm_lib_extended
+
+To install dependencies:
+
+```bash
+bun install
+```
+
+To run:
+
+```bash
+bun run 
+```
+
+This project was created using `bun init` in bun v1.3.4. [Bun](https://bun.com) is a fast all-in-one JavaScript runtime.
