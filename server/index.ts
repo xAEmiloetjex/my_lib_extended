@@ -8,6 +8,8 @@ import type { int } from "../lib/ddrm/index";
 import { mkRandStr3, randomHSV, uniqueStore } from "../lib/ddrm/core/utils/common.js";
 import { CHAR_LIST } from "../lib/ddrm/core/types/constants_1.js";
 
+import {Matrix} from "../lib/matrix/index.js"
+
 function dir(obj: any) {
     console.dir(obj, {depth:null, color: true});
 }
@@ -31,6 +33,8 @@ function val() {
         $MUT: $MUT.get()
     }
 }
+
+const mtrx = new Matrix();
 
 (function main() {
 
@@ -69,5 +73,55 @@ dir({
     UwU: UwU.map(),
     OwO: OwO.map()
 })
+
+//
+let m_count = 0;
+const m_rows = 16;
+const m_cols = 16;
+
+function seedMtrx() {
+    // if (m_cols_count === m_cols - 1) {
+    //     m_rows_count++;
+    //     m_cols_count = 0;
+    // }
+    // if (m_cols_count === m_cols - 1)
+
+    // mtrx.row(m_rows_count).col(m_cols_count).set(m_count);
+    // m_count++
+
+    for (let row_c = 0; row_c <= m_rows - 1; row_c++) {
+        for (let col_c = 0; col_c <= m_cols - 1; col_c++) {
+            mtrx.row(row_c).col(col_c).set(m_count);
+            m_count++
+        }
+    }
+    dir(mtrx.toNestedArray(m_rows, m_cols));
+    dir(mtrx.toObject());
+}
+
+seedMtrx()
+
+let newObj = mtrx.toObject();
+const mtrx2 = new Matrix();
+const mtrx3 = new Matrix();
+
+newObj['uwu'] = 69
+
+try {
+    mtrx2.fromObject(mtrx.toObject());
+    // mtrx2.fromObject(newObj);
+} catch(e) {
+    console.log(e)
+}
+
+try {
+    // dir(mtrx.toNestedArray(m_rows, m_cols))
+    mtrx3.fromNestedArray(mtrx.toNestedArray(m_rows, m_cols));
+    // dir(mtrx3.toObject())
+} catch(e) {
+    console.log('fromArr', e)
+}
+
+dir (mtrx3.toNestedArray(m_rows, m_cols))
 
 })()
