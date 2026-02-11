@@ -23,6 +23,16 @@ function Vec1<T>(item?: T): Vec<T> {
 const $IMUT = Vec1<number>(69).imut().unsafe();
 const $MUT  = Vec1<number>(420).mut().unsafe();
 
+const $VEC0 = new Vec<int>()
+    .mut()
+    .unsafe()
+    .readable(false);
+
+const $VEC1 = new Vec<int>()
+    .mut()
+    .readable(false)
+    .unsafe();
+
 function get(vec: Vec<any>) {
     return vec.get();
 }
@@ -52,6 +62,7 @@ $IMUT.values.set(0, 67);
 
 $MUT.set(69);
 
+// console.log($IMUT['UwU'])
 
 dir(val())
 
@@ -99,29 +110,45 @@ function seedMtrx() {
     dir(mtrx.toObject());
 }
 
-seedMtrx()
+// seedMtrx()
 
-let newObj = mtrx.toObject();
-const mtrx2 = new Matrix();
-const mtrx3 = new Matrix();
+// let newObj = mtrx.toObject();
+// const mtrx2 = new Matrix();
+// const mtrx3 = new Matrix();
 
-newObj['uwu'] = 69
+// newObj['uwu'] = 69
 
-try {
-    mtrx2.fromObject(mtrx.toObject());
-    // mtrx2.fromObject(newObj);
-} catch(e) {
-    console.log(e)
-}
+// try {
+//     mtrx2.fromObject(mtrx.toObject());
+//     // mtrx2.fromObject(newObj);
+// } catch(e) {
+//     console.log(e)
+// }
 
-try {
-    // dir(mtrx.toNestedArray(m_rows, m_cols))
-    mtrx3.fromNestedArray(mtrx.toNestedArray(m_rows, m_cols));
-    // dir(mtrx3.toObject())
-} catch(e) {
-    console.log('fromArr', e)
-}
+// try {
+//     // dir(mtrx.toNestedArray(m_rows, m_cols))
+//     mtrx3.fromNestedArray(mtrx.toNestedArray(m_rows, m_cols));
+//     // dir(mtrx3.toObject())
+// } catch(e) {
+//     console.log('fromArr', e)
+// }
 
-dir (mtrx3.toNestedArray(m_rows, m_cols))
+// dir (mtrx3.toNestedArray(m_rows, m_cols));
+
+[$VEC0, $VEC1].forEach((v,_i,_a) => {
+    v.fromString('__ivec[0,1,2,3,4,5,6,7,8,9]');
+});
+
+const $VEC2 = $VEC0.clone().readable(true);
+
+[$VEC0, $VEC1, $VEC2].forEach((v,i,_a) => {
+    console.log(`========\nmap: ${i}`);
+    dir({
+        values: v.map(),
+        isStatic: v.isStatic,
+        isReadable: v.isReadable,
+        unsafeAllowed: v.unsafeAllowed
+    });
+});
 
 })()

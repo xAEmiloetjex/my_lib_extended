@@ -408,10 +408,21 @@ export class Vec<T> {
     }
 
     public clone() {
-        return new Vec<T>(...(this.toArray()))
+        let wasUnreadable: boolean = false;
+        
+        if (this.#readable === false) {
+            this.readable(true);
+            wasUnreadable = true;
+        }
+
+        const vec = new Vec<T>(...(this.toArray()))
             .static(this.#static)
             .allowUnsafe(this.#unsafe)
             .readable(this.#readable);
+
+        if (wasUnreadable === true) this.readable(false);
+
+        return vec;
     }
 
     public toString(inheritParentProps: boolean = false): VecString {
@@ -464,11 +475,13 @@ export class Vec<T> {
             str.startsWith('__suevec')
         )) return this;
         /** */
-        let oUnsafe: boolean = false;
-        let oStatic: boolean = false;
+        let oUnsafe:   boolean = false;
+        let oStatic:   boolean = false;
+        let oReadable: boolean = true;
 
-        if (this.#unsafe === true) oUnsafe = true;
-        if (this.#static === true) oStatic = true;
+        if (this.#unsafe === true)    oUnsafe   = true;
+        if (this.#static === true)    oStatic   = true;
+        if (this.#readable === false) oReadable = false;
 
         /** */
         let type: VecTypes = VecTypes.VEC;
@@ -510,6 +523,7 @@ export class Vec<T> {
                 this.static(true);
                 break;
             case VecTypes.IVEC:
+                this.readable(oReadable);
                 this.readonly(oStatic);
                 this.allowUnsafe(oUnsafe);
                 break;
